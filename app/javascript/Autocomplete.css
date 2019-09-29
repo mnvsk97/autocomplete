@@ -1,0 +1,37 @@
+.Autocomplete {
+  width: 100%;
+  border: 1px solid grey;
+}
+
+.Autocomplete input {
+  width: 100%;
+  border: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  color: rba(0, 0, 0, 0.73);
+  padding: 10px 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.Autocomplete ul {
+  list-style: none;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid grey;
+}
+
+.Autocomplete ul::before {
+  content: '';
+}
+
+.Autocomplete li {
+  padding: 10px 5px;
+  cursor: pointer;
+}
+
+.Autocomplete li::hover {
+  text-decoration: underline;
+  background-color: rgba(128, 128, 128, 0.2);
+}
