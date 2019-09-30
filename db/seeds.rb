@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-1000.times do
+30.times do
     Player.create(
         name: Faker::Sports::Football.player,
         position: Faker::Sports::Football.position,

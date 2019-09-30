@@ -12,54 +12,97 @@ class Autocomplete extends Component {
       suggestionSelected: false,
       showSearchBar: true,
       showBackButton: false,
-      showSearchButton: true
+      showSearchButton: true,
+      playerNames: [],
+      showSuggestions: true
     };
   }
 
-  componentDidMount() {
-    axios.get('/api/posts').then(response => {
-      this.setState({ players: response.data.players });
-    });
-    const { players } = this.state;
-    console.log(players);
-  }
-
-  onTextChange = e => {
-    const input = e.target.value;
-    let suggestions = [];
-    const { players } = this.state;
-    if (input.length > 0) {
-      const regex = new RegExp(`^${input}`, 'i');
-      suggestions = players.sort().filter(v => regex.test(v));
-    }
+  hideSuggestions = () => {
     this.setState({
-      suggestions: suggestions,
-      text: input
+      showSuggestions: false
     });
   };
 
+  // fetches data whenever search component loads.
+
+  // componentDidMount() {
+  //   axios.get('/api/players').then(response => {
+  //     var playerNames = [];
+  //     const players = response.data.players;
+  //     for(var i=0;i<players.length;i++){
+  //       playerNames.push(players[i][0] + ", " + players[i][1] + ", " + players[i][2] + ", " + players[i][3]);
+  //     }
+  //     this.setState({ players: players, playerNames: playerNames});
+  //   });
+  // }
+
+  onTextChange = e => {
+    const input = e.target.value;
+
+    // regex search on prefetched data
+
+    // let suggestions = [];
+    // const { playerNames } = this.state;
+    // if (input.length > 0) {
+    //   const regex = new RegExp(`^${input}`, 'i');
+    //   suggestions = playerNames.sort().filter(v => regex.test(v));
+    // }
+    // this.setState({
+    //   suggestions: suggestions,
+    //   text: input
+    // });
+    // axios.get('/api/players').then(response => {
+    //   var playerNames = [];
+    //   const players = response.data.players;
+    //   for(var i=0;i<players.length;i++){
+    //     playerNames.push(players[i][0] + ", " + players[i][1] + ", " + players[i][2] + ", " + players[i][3]);
+    //   }
+    //   this.setState({ players: players, playerNames: playerNames});
+    // });
+
+    //Fetched data from database whenever input changes
+
+    let playerNames = [];
+    axios({
+      method: 'post',
+      url: '/api/players/get_suggestions',
+      data: { name: input }
+    }).then(response => {
+      const suggestions = response.data.suggestions;
+      for (var i = 0; i < suggestions.length; i++) {
+        playerNames.push(
+          suggestions[i][0] +
+            ', ' +
+            suggestions[i][1] +
+            ', ' +
+            suggestions[i][2]
+        );
+      }
+      this.setState({
+        playerNames: playerNames,
+        text: input
+      });
+    });
+  };
   suggestionSelected = value => {
     const { suggestionSelected } = this.state;
     this.setState(() => ({
       text: value,
-      suggestions: [],
+      playerNames: [],
       suggestionSelected: !suggestionSelected
     }));
   };
 
   renderSuggestions = () => {
-    const { suggestions } = this.state;
-    if (suggestions.length === 0) {
-      if (
-        this.state.text &&
-        this.state.text.length > 0 &&
-        !this.state.suggestionSelected
-      )
-        return <p>No Suggestions Found!</p>;
+    const { text, playerNames } = this.state;
+    if (playerNames.length === 0 || text.length === 0) {
+      this.hideSuggestions;
+      return null;
     }
     return (
       <ul>
-        {suggestions.map(suggestion => (
+        {playerNames.map(suggestion => (
           <li
             onClick={() => this.suggestionSelected(suggestion)}
             key={suggestion}
@@ -69,30 +112,6 @@ class Autocomplete extends Component {
         ))}
       </ul>
     );
-  };
-
-  onSubmitSearch = () => {
-    this.setState({
-      showSearchBar: false,
-      showBackButton: true,
-      showSearchButton: false
-    });
-  };
-
-  onBackButtonClick = () => {
-    this.setState({
-      showSearchBar: true,
-      showBackButton: false,
-      showSearchButton: true
-    });
-  };
-
-  renderSearchButton = () => {
-    return <button onClick={() => this.onSubmitSearch()}>Search</button>;
-  };
-
-  renderBackButton = () => {
-    return <button onClick={() => this.onBackButtonClick()}>go back</button>;
   };
 
   renderSearchBar = () => {
@@ -107,13 +126,16 @@ class Autocomplete extends Component {
   };
 
   render() {
-    const { showSearchButton, showSearchBar, showBackButton } = this.state;
+    const {
+      showSearchButton,
+      showSearchBar,
+      showBackButton,
+      showSuggestions
+    } = this.state;
     return (
       <div className='Autocomplete'>
         {showSearchBar && this.renderSearchBar()}
         {this.renderSuggestions()}
-        {showSearchButton && this.renderSearchButton()}
-        {showBackButton && this.renderBackButton()}
       </div>
     );
   }

@@ -1,24 +1,57 @@
-# README
+# Autocomplete Search Bar
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Search Bar with auto complete suggestions
 
-Things you may want to cover:
+## Getting Started
 
-* Ruby version
+### Prerequisites
 
-* System dependencies
+What things you need to install the software and how to install them
 
-* Configuration
+```
+1. ruby 2.5.1
+2. npm install
+```
 
-* Database creation
+### Installing
 
-* Database initialization
+A step by step series of examples that tell you how to get a development env running
 
-* How to run the test suite
+Say what the step will be
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+bundle install
+```
 
-* Deployment instructions
+```
+npm install
+```
 
-* ...
+```
+bin/setup
+
+rails db:seed
+```
+
+After seeding the database, 30 records will be inserted in [Player] table;
+
+## Running the tests
+
+```
+rspec
+```
+
+## Notes :
+
+1. Feature : Search Box with auto suggestions
+
+2. Data has been added into database using seed.rb. 30 records have been added using Faker gem.
+
+3. Suggestion are fetched from backend whenever input text changes in the search box. Another way would be to fetch data from backend whenever component is mounted(This code is in comments)
+
+4. Tech Stack :
+   Backend : Ruby on Rails
+   FrontEnd : React.jsDBMS : Postgresql
+   Endpoints : / -> root -> search bar
+     /api/posts -> render all posts
+     /api/posts/get_suggestions -> get suggestions based on post param( name )
