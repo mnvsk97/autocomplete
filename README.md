@@ -26,12 +26,6 @@ rails db:seed
 
 After seeding the database, 30 records will be inserted in [Player] table;
 
-## Running the tests
-
-```
-rspec
-```
-
 ## Notes :
 
 1. Feature : Search Box with auto suggestions
