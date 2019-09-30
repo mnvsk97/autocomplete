@@ -38,5 +38,4 @@ After seeding the database, 30 records will be inserted in [Player] table;
    Backend : Ruby on Rails
    FrontEnd : React.jsDBMS : Postgresql
    Endpoints : / -> root -> search bar, 
-     /api/posts -> render all posts, 
      /api/posts/get_suggestions -> get suggestions based on post param( name )
